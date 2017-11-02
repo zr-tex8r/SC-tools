@@ -1,0 +1,193 @@
+%%
+%% This is file 'scpremiumfriday.sty'.
+%% 
+%% Copyright (c) 2017 Takayuki YATO (aka. "ZR")
+%%   GitHub:   https://github.com/zr-tex8r
+%%   Twitter:  @zr_tex8r
+%%
+%% This package is distributed under the MIT License.
+%%
+
+%% package declaration
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{scpremiumfriday}[2017/03/24 v0.2]
+\def\sczpf@pkgname{scpremiumfriday}
+
+%--------------------------------------- check premium-friday-ness
+
+%% \ifsczpf@premium@friday
+\newif\ifsczpf@premium@friday
+\begingroup
+  \def\sczpf@check@premium@friday@a{%
+    \@tempcnta\year \multiply\@tempcnta1461 \divide\@tempcnta4
+    \@tempcntb\year \divide\@tempcntb100 \advance\@tempcnta-\@tempcntb
+    \divide\@tempcntb4 \advance\@tempcnta\@tempcntb
+    \@tempcntb\month \advance\@tempcntb-2 \multiply\@tempcntb520
+    \divide\@tempcntb17 \advance\@tempcnta\@tempcntb
+    \advance\@tempcnta-678912 \advance\@tempcnta\day}
+  \ifnum\month<3 \advance\month12 \advance\year-1 \fi
+  \sczpf@check@premium@friday@a \count@\@tempcnta
+  \advance\month1 \day1
+  \ifnum\month>14 \month3 \advance\year1 \fi
+  \sczpf@check@premium@friday@a \advance\@tempcnta-3
+  \divide\@tempcnta7 \multiply\@tempcnta7 \advance\@tempcnta2
+  \ifnum\@tempcnta=\count@ \aftergroup\sczpf@premium@fridaytrue \fi
+\endgroup
+
+%% if not the day, then quit right now
+\ifsczpf@premium@friday\else
+\expandafter\endinput\fi\relax
+
+%% \ifsczpf@go@home
+\newif\ifsczpf@go@home
+\ifnum\time<900 \else
+  \sczpf@go@hometrue
+\fi
+
+%--------------------------------------- prepare the hook
+
+%% \sczpf@begindoc@hook
+\let\sczpf@begindoc@hook\@empty
+\begingroup
+  \toks@\expandafter{\document}
+  \xdef\document{%
+    \endgroup
+    \noexpand\sczpf@begindoc@hook
+    \begingroup
+    \the\toks@}
+\endgroup
+
+%--------------------------------------- premium console message
+
+%% \sczpf@message@with
+\begingroup
+\catcode`\^^A=14 \catcode`\#=12
+\catcode`\^^\=0 \catcode`\^^[=1 \catcode`\^^]=2 \catcode`\^^X=6
+\endlinechar=10 \catcode10=12 \catcode96=7 \let\do\@makeother
+\dospecials``\gdef``\sczpf@message@with``X1``X2``[``A
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+       ____
+    ___HHHH   _____                  WOW!
+   / .   . \ |NICE!|       It's Premium Friday today!
+   \  ---  / |~~~~~
+ V :#######: Y             ``X1
+  \/   o*"*\/                                ``X2
+  {    o    }
+   \_______/                                         HURRAY!!
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%``]``A
+``\endgroup%
+
+%% \sczpf@message
+\ifsczpf@go@home
+  \def\sczpf@message{\sczpf@message@with
+   {Now it's time to go home....}{}}%
+\else
+  \def\sczpf@message{\sczpf@message@with
+   {How are you going to spend time}{after 3 p.m.?}}%
+\fi
+
+%--------------------------------------- premium output
+
+%% variables
+\newif\ifsczpf@scsnowman@ok
+
+%% \sczpf@try@load@scsnowman
+\def\sczpf@try@load@scsnowman{%
+  \sczpf@scsnowman@oktrue
+  \IfFileExists{scsnowman.sty}{}{\sczpf@scsnowman@okfalse}%
+  \IfFileExists{tikz.sty}{}{\sczpf@scsnowman@okfalse}%
+  \ifsczpf@scsnowman@ok
+    \ifx\pgfsysdriver\@undefined
+      \ifnum0%
+          \ifx\XeTeXversion\@undefined\else1\fi
+          \ifx\outputmode\@undefined\else \the\outputmode \fi
+          \ifx\pdfoutput\@undefined\else \the\pdfoutput \fi >\z@
+        \RequirePackage{graphicx}%
+      \fi
+      \ifcase0\csname sczpf@gd/%
+          \ifx\Gin@driver\@undefined\else\Gin@driver\fi
+          \endcsname\relax
+      \or \edef\pgfsysdriver{pgfsys-\Gin@driver}%
+      \else
+        \IfFileExists{pgfsys-luatex.def}{%
+          \def\pgfsysdriver{pgfsys-luatex.def}%
+        }{\IfFileExists{luatex85.sty}{%
+          \def\pgfsysdriver{pgfsys-pdftex.def}%
+          \RequirePackage{luatex85}%
+        }{}}%
+      \fi
+    \fi
+    \ifx\pgfsysdriver\@undefined
+      \sczpf@scsnowman@okfalse
+    \else
+      \RequirePackage{tikz}%
+      \RequirePackage{scsnowman}%
+    \fi
+  \fi}
+\@namedef{sczpf@gd/luatex.def}{2}
+\@namedef{sczpf@gd/pdftex.def}{1}
+\@namedef{sczpf@gd/xetex.def}{1}
+\@namedef{sczpf@gd/dvips.def}{1}
+\@namedef{sczpf@gd/dvipdfmx.def}{1}
+
+%% \sczpf@prepare@output
+\def\sczpf@prepare@output{%
+  \DeclareFontFamily{OT1}{sczpfCmfi}{}%
+  \DeclareFontShape{OT1}{sczpfCmfi}{m}{n}{<->cmfi10}{}%
+  \sczpf@try@load@scsnowman
+  \ifsczpf@scsnowman@ok
+    \definecolor{sczpfBrown}{rgb}{0.4,0.1,0.0}%
+    \definecolor{sczpfGreen}{rgb}{0.0,0.5,0.0}%
+    \definecolor{sczpfRed}{rgb}{1.0,0.0,0.0}%
+    \definecolor{sczpfSnow}{rgb}{0.6,0.8,1.0}%
+    \def\sczpf@snowman{%
+      \begingroup
+        \usefont{T1}{lmr}{m}{n}\fontsize{38.4}{0}\selectfont
+        \scsnowman[hat=sczpfGreen,muffler=sczpfRed,%
+          arms=sczpfBrown,snow=sczpfSnow,scale=10]%
+      \endgroup}%
+  \else
+    \def\sczpf@snowman{%
+      \begingroup
+        \font\x=ipxm-r-u26 at 300pt\relax \x
+        \symbol{"03}%
+      \endgroup}%
+  \fi}
+
+%% \sczpf@make@output
+\def\sczpf@make@output{%
+  \parindent\z@
+  \usefont{OT1}{sczpfCmfi}{m}{n}\fontsize{72}{96}\selectfont
+  \hbox to\hsize{\hskip1.5em Premium\hfil}%
+  \hbox to\hsize{\hfil Friday!!\hskip1.5em}%
+  \vskip 20pt
+  \hbox to\hsize{\hfil\sczpf@snowman\hfil}%
+  \vskip 20pt
+  \usefont{OT1}{sczpfCmfi}{m}{n}\fontsize{48}{72}\selectfont
+  \hbox to\hsize{\hfil Time to Go Home!\hfil}}
+
+%--------------------------------------- the hook
+
+%% register
+\ifsczpf@go@home
+  \g@addto@macro\sczpf@begindoc@hook{%
+    \sczpf@prepare@output}
+\fi
+\g@addto@macro\sczpf@begindoc@hook{%
+  \immediate\write\@unused{\sczpf@message}}
+\ifsczpf@go@home
+  \g@addto@macro\sczpf@begindoc@hook{%
+    \output{\setbox\z@\box\@cclv \deadcycles\z@}%
+    \shipout\vbox{%
+      \moveleft1in\vbox{%
+        \hsize=210mm \linewidth\hsize
+        \kern-1in \kern40mm
+        \sczpf@make@output}}%
+    \nonstopmode\@@end}
+\fi
+
+%--------------------------------------- done
+\endinput
+%% EOF
