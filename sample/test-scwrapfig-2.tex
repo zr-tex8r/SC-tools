@@ -1,0 +1,18 @@
+\documentclass[pdflatex,ja=standard,a4paper]{bxjsarticle}
+\usepackage[noscsnowman]{scwrapfig}
+\usepackage{bxjalipsum,tikzducks}
+\begin{document}
+
+\section{使ってみた}
+\begin{itemize}
+\item \jalipsum[1]{kusamakura}
+\item \jalipsum[2]{kusamakura}
+\item \jalipsum[3]{kusamakura}
+  \begin{wrapfigure}{R}{80pt}
+    \centering \tikz{\duck[hat=red!30!black]}
+    \caption{非ゆきだるま}
+  \end{wrapfigure}
+  \jalipsum[4]{kusamakura}
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,260 @@
+%%
+%% This is file 'scwrapfig.sty'.
+%%
+%% Copyright (c) 2017 Takayuki YATO (aka. "ZR")
+%%   GitHub:   https://github.com/zr-tex8r
+%%   Twitter:  @zr_tex8r
+%%
+%% This package is distributed under the MIT License.
+%%
+
+%% package declaration
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{scwrapfig}[2017/11/08 v0.8]
+\def\sczwf@pkgname{scwrapfig}
+
+%--------------------------------------- general
+
+%% packages
+\RequirePackage{ifpdf,pdftexcmds}
+\providecommand\bxDebug[1]{}
+
+%% variables
+\newif\ifsczwf@ok
+\newif\ifsczwf@scsnowman
+\newdimen\sczwf@dima
+\newdimen\sczwf@dimb
+
+%--------------------------------------- options
+
+%% declarations
+\DeclareOption{scsnowman}{\sczwf@scsnowmantrue}
+\DeclareOption{noscsnowman}{\sczwf@scsnowmanfalse}
+%% dispatch
+\ExecuteOptions{scsnowman}
+\ProcessOptions*
+
+%--------------------------------------- environment check
+
+%% check if scsnowman is available
+\sczwf@okfalse % check if the driver is known
+\ifx\Gin@driver\@undefined\else \sczwf@oktrue \fi
+\ifpdf \sczwf@oktrue \fi
+\pdf@isprimitive\luatexversion\luatexversion{\sczwf@oktrue}{}
+\pdf@isprimitive\XeTeXversion\XeTeXversion{\sczwf@oktrue}{}
+\ifsczwf@ok % check if the packages are installed
+  \IfFileExists{tikz.sty}{}{\sczwf@okfalse}
+  \IfFileExists{scsnowman.sty}{}{\sczwf@okfalse}
+\fi
+\ifsczwf@scsnowman\ifsczwf@ok\else
+  \PackageWarningNoLine\sczwf@pkgname
+   {Package 'scsnowman' is not available, so\MessageBreak
+    option 'noscsnowman' is used as fallback}
+  \sczwf@scsnowmanfalse
+\fi\fi
+
+%% check if ipaex-type1 is available
+\sczwf@oktrue
+\ifsczwf@scsnowman\else
+  \IfFileExists{c70ipxm.fd}{}{\sczwf@okfalse}
+\fi
+\ifsczwf@ok\else
+  \PackageError\sczwf@pkgname
+   {Alas, no snowman image is available}
+   {Package loading is aborted.\MessageBreak\@ehc}%
+\expandafter\endinput\fi\relax
+
+%--------------------------------------- safe wrapper
+
+%% variables
+\newbox\sczwf@box
+\let\sczwf@pos\relax
+\let\sczwf@overhang\relax
+\let\sczwf@org@caption\relax
+
+%% constants
+\chardef\sczwf@pos@@r=0 \chardef\sczwf@pos@@R=0
+\chardef\sczwf@pos@@l=1 \chardef\sczwf@pos@@L=1
+\chardef\sczwf@pos@@i=2 \chardef\sczwf@pos@@I=2
+\chardef\sczwf@pos@@o=3 \chardef\sczwf@pos@@O=3
+
+%% \sczwf@wrapfloat{<type>}[<dummy>]{<pos>}[<overhang>]{<width>}
+% The beginning of wrapfloat.
+\def\sczwf@wrapfloat#1{%
+  \def\@captype{#1}%
+  \@ifnextchar[{\sczwf@wrapfloat@a}{\sczwf@wrapfloat@a[]}}
+\def\sczwf@wrapfloat@a[#1]#2{%
+  \edef\sczwf@pos{#2}\edef\sczwf@pos{\expandafter\@car\sczwf@pos r\@nil}%
+  \@ifnextchar[{\sczwf@wrapfloat@b}{\sczwf@wrapfloat@b[\wrapoverhang]}}
+\def\sczwf@wrapfloat@b[#1]#2{%
+  \def\sczwf@overhang{#1}%
+  \setbox\sczwf@box\vtop\bgroup
+    \setlength\hsize{#2}%
+    \ifdim\hsize>\z@
+      \@parboxrestore
+    \else % width auto-detected
+      \setbox\z@\hbox\bgroup % catch the content
+        \let\sczwf@org@caption\caption \let\caption\sczwf@caption
+        \ignorespaces
+    \fi}
+\def\sczwf@caption{%
+  \ifdim\hsize>\z@
+    \let\caption\sczwf@org@caption
+  \else % width auto-detected
+    \unskip \egroup
+    \hsize\wd\z@ \@parboxrestore % set hsize
+    \box\z@ % and put the content
+  \fi
+  \caption}
+
+%% \sczwf@end@wrapfloat
+% The end of wrapfloat.
+\def\sczwf@end@wrapfloat{%
+    \ifdim\hsize>\z@
+      \@@par
+      \hrule\@width\hsize\@height\z@ % force the width
+    \else % width auto-detected, no caption
+      \unskip \egroup % close hbox
+      \box\z@ % and put the content in vbox
+    \fi
+  \egroup % close vbox (\sczwf@box)
+  % get real overhang and position
+  \def\width{\wd\sczwf@box}\setlength\sczwf@dima{\sczwf@overhang}%
+  \edef\sczwf@overhang{\the\sczwf@dima}%
+  \expandafter\let\expandafter\sczwf@pos\csname
+      sczwf@pos@@\sczwf@pos\endcsname
+  \ifx\sczwf@pos\relax \let\sczwf@pos\sczwf@pos@@r \fi
+  \ifnum\sczwf@pos>1
+    \ifodd\if@twoside\c@page\else\@ne\fi
+      \@tempcnta3 \advance\@tempcnta-\sczwf@pos
+    \else \@tempcnta-2 \advance\@tempcnta\sczwf@pos
+    \fi
+    \chardef\sczwf@pos\@tempcnta
+  \fi
+  % place the block
+  \par \vskip\intextsep
+  \sczwf@place@block
+  \vskip\intextsep}
+
+%% \sczwf@place@block
+\def\sczwf@place@block{%
+  \@tempdima\linewidth \advance\@tempdima\sczwf@overhang\relax
+  \advance\@tempdima-\wd\sczwf@box
+  \sczwf@dima\z@
+  \ifdim\@tempdima<\z@
+    \columnsep\z@
+  \else\ifdim\@tempdima<\columnsep
+    \columnsep\@tempdima
+  \else
+    \sczwf@dima\@tempdima \advance\sczwf@dima-\columnsep
+  \fi\fi
+  \sczwf@dimb\ht\sczwf@box \advance\sczwf@dimb\dp\sczwf@box
+  \setbox\z@\hb@xt@\sczwf@dima{%
+    \sczwf@snowman@filler\sczwf@dima\sczwf@dimb}%
+  \ifcase\sczwf@pos % right
+    \noindent\hb@xt@\linewidth{%
+      \lower\dp\sczwf@box\box\z@ \kern\columnsep
+      \box\sczwf@box \hss}%
+  \else % left
+    \noindent\hb@xt@\linewidth{%
+      \hss \box\z@
+      \kern\columnsep \lower\dp\sczwf@box\box\z@}%
+  \fi}
+\def\sczwf@make@snowman@fill@box{%
+  \setbox\sczwf@fill@box\hbox{%
+    \vrule\@width\sczwf@dima\@height\ht\sczwf@box\@depth\dp\sczwf@box}}
+
+%--------------------------------------- essential filler
+
+%% variables
+\let\sczwf@scwidth\relax
+\let\sczwf@scheight\relax
+
+%% \sczwf@draw@snowman{<size>}{<var>}
+\ifsczwf@scsnowman
+  \RequirePackage{scsnowman}[2016/08/08]%v0.6
+  \font\sczwf@base=cmr10
+  \def\sczwf@draw@snowman#1#2{%
+    \@tempdima=#1\relax \@tempdima=0.129032\@tempdima
+    \edef\sczwf@tmpa{\strip@pt\@tempdima}%
+    \@tempcnta=#2\relax \divide\@tempcnta3
+    \multiply\@tempcnta-3 \advance\@tempcnta#2\relax
+    \edef\sczwf@tmpb{\ifcase\@tempcnta
+      red\or blue\or green!50!black\fi}%
+    \setbox\tw@\hbox{\sczwf@base\scsnowman[%
+      hat,arms,buttons,snow,muffler=\sczwf@tmpb,scale=\sczwf@tmpa]}%
+    \raise\dp\tw@\box\tw@}
+\else
+  \DeclareFontFamily{U}{sczwfA}{}
+  \DeclareFontShape{U}{sczwfA}{m}{n}{<->ipxm-r-u26}{}
+  \def\sczwf@draw@snowman#1#2{%
+    \setbox\tw@\hbox{\usefont{U}{sczwfA}{m}{n}\relax
+      \fontsize{#1}{0}\selectfont \char3}%
+    \raise\dp\tw@\box\tw@}
+\fi
+
+%% \sczwf@snowman@filler{<width>}{<height>}
+\def\sczwf@snowman@filler#1#2{%
+  \@tempdima=#1\relax \@tempdimb=#2\relax
+  \edef\sczwf@fwidth{\the\@tempdima}\edef\sczwf@fheight{\the\@tempdimb}%
+  \sczwf@dima=\scwrapfigMaxSize\@tempdimb
+  \ifx\@tempdimb<\scwrapfigMinSize\relax 
+  \else\ifdim\sczwf@dima<\scwrapfigMinSize\relax
+    \sczwf@dima\scwrapfigMinSize\relax
+  \fi\fi
+  \@tempcnta\z@ % number of snowmen
+  \ifdim\sczwf@dima<\scwrapfigMinSize\relax \else
+    \setbox\tw@\hbox{\sczwf@draw@snowman\sczwf@dima\z@}%
+    \@tempdima\sczwf@fwidth\relax \advance\@tempdima.04\wd\tw@
+    \divide\@tempdima\wd\tw@ \@tempcnta\@tempdima
+  \fi
+\bxDebug{\sczwf@fwidth/\sczwf@fheight/\the\sczwf@dima/\the\@tempcnta}%
+  \ifnum\@tempcnta>\@ne
+    \sczwf@dimb\sczwf@fheight\relax \advance\sczwf@dimb-\ht\tw@
+    \@tempcntb\z@
+    \@whilenum{\@tempcntb<\@tempcnta}\do{%
+      \ifnum\@tempcntb>\z@ \hfil \fi
+      \raise \ifodd\@tempcntb\z@\else\sczwf@dimb\fi \hbox{%
+        \sczwf@draw@snowman\sczwf@dima\@tempcntb}%
+      \advance\@tempcntb\@ne}
+  \fi}
+
+%--------------------------------------- public commands
+
+%%<+> public parameters
+\newcommand*\scwrapfigMaxSize{0.75}
+\newcommand*\scwrapfigMinSize{10pt}
+
+%% get along wrapfig
+\@ifpackageloaded{wrapfig}{%
+  \sczwf@revoke@commands
+}{%else
+  \let\wrapoverhang\sczwf@dima
+  \AtBeginDocument{%
+    \sczwf@revoke@commands
+    \sczwf@declare@commands}%
+}
+
+%% \sczwf@revoke@commands
+\@onlypreamble\sczwf@revoke@commands
+\def\sczwf@revoke@commands{%
+  \let\wrapfigure\relax
+  \let\wraptable\relax
+  \let\wrapfloat\relax}
+
+%% \sczwf@declare@commands
+\@onlypreamble\sczwf@declare@commands
+\def\sczwf@declare@commands{%
+  \newcommand\wrapfigure{\sczwf@wrapfloat{figure}}%
+  \newcommand\wraptable{\sczwf@wrapfloat{table}}%
+  \@ifdefinable\wrapfloat{\let\wrapfloat\sczwf@wrapfloat}%
+  \let\endwrapfigure\sczwf@end@wrapfloat
+  \let\endwraptable\sczwf@end@wrapfloat
+  \let\endwrapfloat\sczwf@end@wrapfloat}
+
+%% right now
+\sczwf@declare@commands
+
+%--------------------------------------- done
+\endinput
+%% EOF

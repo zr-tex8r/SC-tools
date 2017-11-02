@@ -1,0 +1,13 @@
+\documentclass[twoside]{article}
+\usepackage{lipsum,scwrapfig}
+\usepackage{tikz,tikzducks}
+\begin{document}
+
+\lipsum[1]
+\begin{wrapfigure}{R}{100pt}
+\centering \tikz{\duck[hat=red!30!black]}
+\caption{This is not a snowman.}
+\end{wrapfigure}
+\lipsum[2]
+
+\end{document}
