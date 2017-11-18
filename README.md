@@ -3,7 +3,9 @@ SC-tools
 
 LaTeX: Collection of LaTeX packages for Snowman Comedians
 
-![NICE!](https://raw.githubusercontent.com/zr-tex8r/SC-tools/images/essence-1.png)
+![NICE!](https://raw.githubusercontent.com/zr-tex8r/SC-tools/images/essence-1.png)  
+*The “essential” one*
+
 
 scpremiumfriday ― Make your documents aware of Premium Friday
 --------------------------------------------------------------
@@ -27,6 +29,22 @@ fancier thing will happen.
 
 Reference:
 [プレミアムフライデー的な何かを作ってみた（scpremiumfriday パッケージ）](http://d.hatena.ne.jp/zrbabbler/20170324/1490318527)
+
+scwrapfig ― SC-variant of wrapfig
+----------------------------------
+
+(stub)
+
+--------------------
+
+S(C)ee Also
+-----------
+
+  * [scsnowman]: The most *essential* package
+  * [SC-ripts]: *Essential* (La)TeX scripts
+
+[scsnowman]: https://github.com/aminophen/scsnowman
+[SC-ripts]: https://github.com/zr-tex8r/SC-ripts
 
 --------------------
 Takayuki YATO (aka. "ZR") 
