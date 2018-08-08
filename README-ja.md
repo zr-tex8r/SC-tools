@@ -40,9 +40,11 @@ S(C)ee Also
 -----------
 
   * [scsnowman]： 最も“本質的”なパッケージ
+  * [scmessages]: LaTeXのエラー・警告メッセージをカワイイものにする
   * [SC-ripts]： “本質的”な(La)TeXスクリプト
 
 [scsnowman]: https://github.com/aminophen/scsnowman
+[scmessages]: https://github.com/wtsnjp/scmessages
 [SC-ripts]: https://github.com/zr-tex8r/SC-ripts
 
 --------------------

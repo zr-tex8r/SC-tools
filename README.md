@@ -41,9 +41,11 @@ S(C)ee Also
 -----------
 
   * [scsnowman]: The most *essential* package
+  * [scmessages]: Make the LaTeX2e messages (errors and warnings) cute
   * [SC-ripts]: *Essential* (La)TeX scripts
 
 [scsnowman]: https://github.com/aminophen/scsnowman
+[scmessages]: https://github.com/wtsnjp/scmessages
 [SC-ripts]: https://github.com/zr-tex8r/SC-ripts
 
 --------------------
