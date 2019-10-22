@@ -1,0 +1,94 @@
+\documentclass[14pt,unicode]{beamer}
+\usepackage{luatexja}
+\usepackage{luatexja-fontspec}
+\renewcommand{\kanjifamilydefault}{\gtdefault}
+\setmainfont{Linux Libertine O}
+\setsansfont{Linux Biolinum O}[
+  Scale=1.2,
+  BoldFont={* Bold}]
+\setmonofont{Noto Sans Mono}
+\setsansjfont{M+ 2p}[
+  BoldFont={M+ 2p bold}]
+\newjfontfamily{\jYasago}{07YasashisaGothic}[
+  BoldFont={07YasashisaGothicBold}]
+\newjfontfamily{\jHarago}{HaranoAji Gothic}
+\newcommand*{\xSize}[2]{\fontsize{#1}{#2}\selectfont}
+\renewcommand{\seriesdefault}{\bfdefault}
+\renewcommand{\kanjiseriesdefault}{\bfdefault}
+
+\usetheme{Madrid}
+\colorlet{mystruc0}{blue!85!green!50!black}
+\colorlet{mystruc3}{yellow!90!red!80!black}
+\usefonttheme{professionalfonts}
+\setbeamertemplate{footline}[page number]{}
+\setbeamertemplate{navigation symbols}{}
+\setbeamerfont{title}{size=\xSize{28}{34},family=\jYasago,series=\bfseries}
+\setbeamerfont{frametitle}{size=\xSize{20}{28},family=\jYasago,series=\bfseries}
+\setbeamercolor{title}{bg=mystruc0}
+\setbeamercolor{background}{bg=white}
+\setbeamerfont{date}{size=\footnotesize}
+
+\usepackage{tikz,graphicx}
+\usepackage{bxcoloremoji}
+\usepackage{scsnowman}
+\usescsnowmanlibrary{zrsymmetric}
+
+\setlength{\leftmargini}{12pt}
+\setlength{\leftmarginii}{12pt}
+
+
+\newcommand\xStrut{%
+  \rule[-20pt]{0pt}{1pt}}
+\newcommand\xNantoka{%
+  \scalebox{1.36}{\jHarago
+    \pdfextension literal page {2 Tr 0.3 w}%
+    ☃% essential
+    \pdfextension literal page {0 Tr 0 w}}}
+
+%---------------------------------------
+% document info
+\title{\TeX{}の脚注をﾅﾝﾄｶに\\する}
+  \author{某ZR{\small（アレ）}\\[8pt]
+  \small\texttt{https://zrbabbler.hatenablog.com/}\\
+  \texttt{@zr\_tex8r}}
+\date{2019年10月12日\\ 於\, \xNantoka\,Conf 2019}
+
+\begin{document}
+
+%=======================================
+\frame{\titlepage}
+
+%=======================================
+\setbeamertemplate{background canvas}[vertical shading][bottom=white,top=mystruc0!15]
+\setbeamercolor{frametitle}{bg=mystruc0,fg=white}
+\setbeamercolor{structure}{fg=mystruc0}
+
+\begin{frame}[plain]
+  \begin{center}
+    \xSize{28}{34}\color{mystruc0}
+    作ってみた\coloremoji{💪}
+  \end{center}
+\end{frame}
+
+\begin{frame}[t]{まとめ\xStrut}
+  \begin{itemize}
+    \item ﾅﾝﾄｶは脚注にあっても素敵\coloremoji{☺}
+  \end{itemize}
+  \vspace{\baselineskip}
+  \begin{center}
+    \makebox[160pt][s]{\mdseries\xSize{24}{0}%
+      \raisebox{0pt}{あ}\hfill
+      \raisebox{12pt}{り}\hfill
+      \raisebox{18pt}{が}\hfill
+      \raisebox{12pt}{と}\hfill
+      \raisebox{0pt}{う}}
+    \par\vspace{-8pt}
+    % symmetric coroutine (in new definition)
+    \scsnowman[hat=green!35!black,arms=green!20!black,
+      buttons=green!35!black,snow,muffler=green!50!black,
+      adjustbaseline,scale=10,shape=zrsymmetric]
+  \end{center}
+\end{frame}
+
+%=======================================
+\end{document}

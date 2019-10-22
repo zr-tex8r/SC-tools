@@ -1,0 +1,270 @@
+%%
+%% This is file 'scnicefoot.sty'.
+%%
+%% Copyright (c) 2019 Takayuki YATO (aka. "ZR")
+%%   GitHub:   https://github.com/zr-tex8r
+%%   Twitter:  @zr_tex8r
+%%
+%% This package is distributed under the MIT License.
+%%
+
+%% package declaration
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{scnicefoot}[2019/10/08 v0.8]
+\def\sczfn@pkgname{scnicefoot}
+\providecommand\bxDebug[1]{}
+
+%--------------------------------------- general
+
+%% packages
+\RequirePackage{scsnowman}[2016/12/22]% v1.0
+\RequirePackage{etoolbox}[2011/01/03]% v2.1
+\ifx\numdef\@undefined \endinput \fi
+\RequirePackage{everyhook}[2011/02/04]% v1.1
+
+%% unique tokens
+\def\sczfn@end{\sczfn@end@}
+
+%% variables
+\let\sczfn@params\relax
+\newbool{sczfn@ok}
+\newbool{sczfn@animate}
+\newbool{sczfn@mpfoot}
+\newbool{sczfn@in@output}
+\newcount\sczfn@count
+\newdimen\sczfn@dima
+\newbox\sczfn@boxz
+
+%--------------------------------------- essential parameters
+
+%% \sczfn@essential@size
+\def\sczfn@essential@size{80pt}
+
+%% \sczfn@essential@params
+\def\sczfn@essential@params{%
+  \edef\sczfn@tmpa{%
+    \ifcase\numexpr\sczfn@count-\sczfn@count/3*3\relax
+      blue\or red\else green!50!black\fi}
+  \edef\sczfn@tmpb{%
+    \ifnum\numexpr\sczfn@count/5*5=\sczfn@count
+      mouthshape=tight,sweat%
+    \else mouthshape=smile\fi}
+  \edef\sczfn@params{%
+    arms,snow,buttons,%
+    hat=\sczfn@tmpa!80!black,muffler=\sczfn@tmpa,\sczfn@tmpb}}
+
+%--------------------------------------- package options
+
+%% 'animate'/'noanimate'
+\DeclareOption{animate}{%
+  \sczfn@animatetrue}
+\DeclareOption{noanimate}{%
+  \sczfn@animatefalse}
+%% 'mpfoot'/'nompfoot'
+\DeclareOption{mpfoot}{%
+  \sczfn@mpfoottrue}
+\DeclareOption{nompfoot}{%
+  \sczfn@mpfootfalse}
+%% dispatch
+\ExecuteOptions{nompfoot}
+\ProcessOptions*
+
+%% check \scnicefootPosition
+\ifdefined\scnicefootPosition
+  \sczfn@animatefalse
+\fi
+%% additional packages
+\ifsczfn@animate
+  \RequirePackage{animate}[]
+\fi
+
+%--------------------------------------- patch to the output routine
+
+%% the patch
+\patchcmd\@makecol{%from
+  \unvbox\footins
+}{%to
+  \sczfn@insert@essential
+}{\sczfn@oktrue}{\sczfn@okfalse}
+\unless\ifsczfn@ok
+  \PackageError\sczfn@pkgname
+   {Patch failed}%
+   {Package loading will be aborted.}
+\expandafter\endinput\fi\relax
+
+%% \sczfn@insert@essential
+\def\sczfn@insert@essential{%
+  \unvbox\footins
+  \sczfn@enable@hook}
+
+%--------------------------------------- the in-text hook
+
+%% variables
+\let\sczfn@hook\relax
+
+%% prepare hooks
+\PushPreHook{par}{\sczfn@hook}
+\PushPreHook{display}{\sczfn@hook}
+\AtBeginDocument{%
+  \sczfn@enable@hook
+  \output\expandafter{\expandafter\sczfn@in@outputtrue\the\output}}
+
+%% \sczfn@enable@hook
+\def\sczfn@enable@hook{%
+  \global\let\sczfn@hook\sczfn@hook@enabled}
+%% \sczfn@disable@hook
+\def\sczfn@disable@hook{%
+  \global\let\sczfn@hook\relax}
+
+%% \sczfn@hook@enabled
+\def\sczfn@hook@enabled{%
+  \unless\ifsczfn@in@output
+    \sczfn@disable@hook
+    \global\advance\sczfn@count\@ne
+    \bxDebug{NICE!(\the\sczfn@count)}%
+    \insert\footins{%
+      \reset@font\footnotesize
+      \interlinepenalty\interfootnotelinepenalty
+      \splittopskip\footnotesep
+      \splitmaxdepth\z@ \floatingpenalty\@MM
+      \hsize\columnwidth \@parboxrestore
+      \sczfn@normal@catcodes
+      \begingroup
+        \sczfn@draw@essential
+      \endgroup}%
+  \fi}
+
+%% \sczfn@normal@catcodes
+\def\sczfn@normal@catcodes{%
+  \catcode32=10 \catcode13=5
+  \catcode`\\=0 \catcode`\{=1 \catcode`\}=2 \catcode`\$=3
+  \catcode`\&=4 \catcode`\#=6 \catcode`\^=7 \catcode`\_=8
+  \catcode`\%=14 \catcode`\~=13 }
+
+%--------------------------------------- 'nompfoot'
+\unless\ifsczfn@mpfoot     %<*!mpfoot>
+
+\sczfn@oktrue
+\begingroup
+  \patchcmd\@iiiminipage{%remove
+    \def\@mpfn{mpfootnote}%
+  }{}{}{\global\sczfn@okfalse}
+  \patchcmd\@iiiminipage{%remove
+    \def\thempfn{\thempfootnote}%
+  }{}{}{\global\sczfn@okfalse}
+  \ifsczfn@ok \global\let\@iiiminipage\@iiiminipage \fi
+\endgroup
+\unless\ifsczfn@ok
+  \appto\@iiiminipage{%
+    \def\@mpfn{footnote}\def\thempfn{\thefootnote}}
+\fi
+
+\fi                     %</mpfoot>
+%--------------------------------------- neutralize footnotetext
+
+\def\sczfn@footnotetext{%
+  \setbox\sczfn@boxz\vbox\bgroup
+    \reset@font\footnotesize
+    \hsize\columnwidth \@parboxrestore
+    \protected@edef\@currentlabel{\csuse{p@footnote}\@thefnmark}%
+    \color@begingroup
+      \@makefntext{\rule\z@\footnotesep\ignorespaces}%
+      \futurelet\sczfn@tok\sczfn@footnotetext@a}
+\def\sczfn@footnotetext@a{%
+  \ifcat\bgroup\noexpand\sczfn@tok \expandafter\sczfn@footnotetext@b
+  \else \expandafter\sczfn@footnotetext@c
+  \fi}
+\def\sczfn@footnotetext@b{%
+  \bgroup\aftergroup\sczfn@footnotetext@d
+    \let\sczfn@tok}
+\def\sczfn@footnotetext@c#1{%
+  #1\sczfn@footnotetext@d}
+\def\sczfn@footnotetext@d{%
+      \@finalstrut\strutbox
+    \color@endgroup
+  \egroup
+  \ifx\pltx@foot@penalty\@undefined\else % adjustment for pTeX
+    \ifhmode\null\fi
+    \ifnum\pltx@foot@penalty=\z@\else
+      \penalty\pltx@foot@penalty
+      \pltx@foot@penalty\z@
+    \fi
+  \fi
+  \setbox\sczfn@boxz\box\voidb@x}% not essential at all
+
+\AtBeginDocument{%
+  \let\@footnotetext\sczfn@footnotetext
+  \let\@mpfootnotetext\sczfn@footnotetext}
+
+%--------------------------------------- the essential one
+
+%% variables
+\let\sczfn@scale\relax
+
+%% \sczfn@font
+\font\sczfn@font=cmtt10 at 8.888888pt
+
+%% \sczfn@draw@essential
+\def\sczfn@draw@essential{%
+  \sczfn@font % fix font
+  \pgfmathsetmacro\sczfn@scale{\sczfn@essential@size/(1.8ex)}%
+  \sczfn@essential@params
+  \edef\sczfn@tmpa{%
+    \noexpand\raisebox{\z@}[\sczfn@essential@size][\z@]{%
+      \noexpand\scsnowman[scale=\sczfn@scale,\sczfn@params]}}%
+  \setbox\sczfn@boxz\hbox{\sczfn@tmpa}%
+  \unless\ifdim\wd\sczfn@boxz<\columnwidth
+    \sczfn@animatefalse
+  \fi
+  \ifdefined\scnicefootPosition
+    \sczfn@fixposition@essential
+  \else\ifsczfn@animate
+    \sczfn@animate@essential
+  \else
+    \noindent\unhbox\sczfn@boxz
+  \fi\fi}
+
+%%---- animation
+
+%% \sczfn@animate@essential
+\def\sczfn@animate@essential{%
+  \sczfn@dima\dimexpr\columnwidth-\wd\sczfn@boxz\relax
+  \let\do\sczfn@animate@essential@dofirst
+  \do{0.000}{1.752}\do{0.010}{19.319}\do{0.030}{19.712}%
+  \do{0.060}{19.841}\do{0.100}{19.899}\do{0.150}{19.930}%
+  \do{0.210}{19.949}\do{0.280}{19.961}\do{0.360}{19.969}%
+  \do{0.450}{19.487}\do{0.550}{19.969}\do{0.640}{19.961}%
+  \do{0.720}{19.949}\do{0.790}{19.930}\do{0.850}{19.899}%
+  \do{0.900}{19.841}\do{0.940}{19.712}\do{0.970}{19.319}%
+  \do{0.990}{14.142}\do{1.000}{0.934}\do{0.990}{19.319}%
+  \do{0.970}{19.712}\do{0.940}{19.841}\do{0.900}{19.899}%
+  \do{0.850}{19.930}\do{0.790}{19.949}\do{0.720}{19.961}%
+  \do{0.640}{19.969}\do{0.550}{19.487}\do{0.450}{19.969}%
+  \do{0.360}{19.961}\do{0.280}{19.949}\do{0.210}{19.930}%
+  \do{0.150}{19.899}\do{0.100}{19.841}\do{0.060}{19.712}%
+  \do{0.030}{19.319}\do{0.010}{14.142}\do{0.000}{2.000}%
+  \end{animateinline}}
+\def\sczfn@animate@essential@dofirst#1#2{%
+  \begin{animateinline}%
+      [autopause,autoplay,loop,autoresume=false,controls=false]{#2}%
+    \sczfn@animate@essential@frame{#1}%
+    \let\do\sczfn@animate@essential@do}
+\def\sczfn@animate@essential@do#1#2{%
+  \newframe[#2]%
+  \sczfn@animate@essential@frame{#1}%
+  \let\do\sczfn@animate@essential@do}
+
+%% \sczfn@fixposition@essential
+\def\sczfn@fixposition@essential{%
+  \sczfn@dima\dimexpr\columnwidth-\wd\sczfn@boxz\relax
+  \sczfn@animate@essential@frame{\scnicefootPosition}}
+
+%% \sczfn@animate@essential@frame{<x>}
+\def\sczfn@animate@essential@frame#1{%
+  \noindent
+  \hb@xt@\z@{\kern#1\sczfn@dima\copy\sczfn@boxz\hss}%
+  \kern\columnwidth}
+
+%--------------------------------------- all done
+\endinput
+%% EOF
