@@ -1,0 +1,27 @@
+% pdfLaTeX document
+\documentclass{article}
+\usepackage[margin=5mm,,noheadfoot,
+    papersize={40mm,60mm}]{geometry}
+\usepackage[svgnames]{xcolor}
+\usepackage{scsnowman}
+\usescsnowmanlibrary{zrsymmetric}% Symmetric!
+%% \CompareSnowmen{<option>...}
+% Shows asymmetric and symmetric snowmen side-by-side.
+\newcommand{\CompareSnowmen}[1]{\par
+  \scsnowman[scale=4,#1]%
+  \scsnowman[scale=4,shape=zrsymmetric,#1]%
+  \par\smallskip}
+\pagestyle{empty}
+\begin{document}\centering
+% Monochrome
+\CompareSnowmen{hat,arms,snow,muffler}
+% Colored
+\CompareSnowmen{hat=green!35!black,arms=green!20!black,
+buttons=green!35!black,snow,muffler=green!50!black}
+% Mikan on head
+\CompareSnowmen{mouthshape=tight,
+  mikan=Orange,leaf=Olive,sweat=SkyBlue}
+% Equipped with brooms
+\CompareSnowmen{hat=Green,arms=Brown,muffler=Red,
+  buttons=Blue,snow=SkyBlue,broom=DarkGoldenrod}
+\end{document}
