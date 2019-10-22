@@ -1,0 +1,330 @@
+%%
+%% This is file 'scpremiumeveryday.sty'.
+%%
+%% Copyright (c) 2018 Takayuki YATO (aka. "ZR")
+%%   GitHub:   https://github.com/zr-tex8r
+%%   Twitter:  @zr_tex8r
+%%
+%% This package is distributed under the MIT License.
+%%
+
+%% package declaration
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{scpremiumeveryday}[2018/08/18 v0.2]
+\def\sczpj@pkgname{scpremiumeveryday}
+
+%--------------------------------------- words
+
+\def\sczpj@adjective@list{%
+% the word list taken from the Go package
+% 'github.com/docker/docker/pkg/namesgenerator'
+\do{Admiring}%
+\do{Adoring}%
+\do{Affectionate}%
+\do{Agitated}%
+\do{Amazing}%
+\do{Angry}%
+\do{Awesome}%
+\do{Blissful}%
+\do{Boring}%
+\do{Brave}%
+\do{Clever}%
+\do{Cocky}%
+\do{Compassionate}%
+\do{Competent}%
+\do{Condescending}%
+\do{Confident}%
+\do{Cranky}%
+\do{Dazzling}%
+\do{Determined}%
+\do{Distracted}%
+\do{Dreamy}%
+\do{Eager}%
+\do{Ecstatic}%
+\do{Elastic}%
+\do{Elated}%
+\do{Elegant}%
+\do{Eloquent}%
+\do{Epic}%
+\do{Fervent}%
+\do{Festive}%
+\do{Flamboyant}%
+\do{Focused}%
+\do{Friendly}%
+\do{Frosty}%
+\do{Gallant}%
+\do{Gifted}%
+\do{Goofy}%
+\do{Gracious}%
+\do{Happy}%
+\do{Hardcore}%
+\do{Heuristic}%
+\do{Hopeful}%
+\do{Hungry}%
+\do{Infallible}%
+\do{Inspiring}%
+\do{Jolly}%
+\do{Jovial}%
+\do{Keen}%
+\do{Kind}%
+\do{Laughing}%
+\do{Loving}%
+\do{Lucid}%
+\do{Mystifying}%
+\do{Modest}%
+\do{Musing}%
+\do{Naughty}%
+\do{Nervous}%
+\do{Nifty}%
+\do{Nostalgic}%
+\do{Objective}%
+\do{Optimistic}%
+\do{Peaceful}%
+\do{Pedantic}%
+\do{Pensive}%
+\do{Practical}%
+\do{Priceless}%
+\do{Quirky}%
+\do{Quizzical}%
+\do{Relaxed}%
+\do{Reverent}%
+\do{Romantic}%
+\do{Sad}%
+\do{Serene}%
+\do{Sharp}%
+\do{Silly}%
+\do{Sleepy}%
+\do{Stoic}%
+\do{Stupefied}%
+\do{Suspicious}%
+\do{Tender}%
+\do{Thirsty}%
+\do{Trusting}%
+\do{Unruffled}%
+\do{Upbeat}%
+\do{Vibrant}%
+\do{Vigilant}%
+\do{Vigorous}%
+\do{Wizardly}%
+\do{Wonderful}%
+\do{Xenodochial}%
+\do{Youthful}%
+\do{Zealous}%
+\do{Zen}%
+}
+
+\def\sczpj@dayoweek@list{%
+\do{Sunday}%
+\do{Monday}%
+\do{Tuesday}%
+\do{Wednesday}%
+\do{Thursday}%
+\do{Friday}%
+\do{Saturday}%
+}
+
+%--------------------------------------- what day is today
+
+%% variables
+\newcount\sczpj@mjd % modified Julian day
+\let\sczpj@adjective\relax
+\let\sczpj@dayoweek\relax
+\newif\ifsczpj@premium@friday
+
+\begingroup
+  \def\sczpj@list@get#1#2#3{%
+    \def\do##1{\noexpand\or##1}\edef\sczpj@tmpa{#2\noexpand\fi}%
+    \def\sczpj@tmpb##1{\ifcase#3}%
+    \edef#1{\expandafter\sczpj@tmpb\sczpj@tmpa}}
+  \def\sczpj@list@len#1#2{%
+    \def\do##1{\advance#1\@ne}#1=\z@#2\relax}
+  \def\sczpj@calc@mjd{%
+    \@tempcnta\year \multiply\@tempcnta1461 \divide\@tempcnta4
+    \@tempcntb\year \divide\@tempcntb100 \advance\@tempcnta-\@tempcntb
+    \divide\@tempcntb4 \advance\@tempcnta\@tempcntb
+    \@tempcntb\month \advance\@tempcntb-2 \multiply\@tempcntb520
+    \divide\@tempcntb17 \advance\@tempcnta\@tempcntb
+    \advance\@tempcnta-678912 \advance\@tempcnta\day}
+  % \sczpj@mjd
+  \ifnum\month<3 \advance\month12 \advance\year-1 \fi
+  \sczpj@calc@mjd \global\sczpj@mjd\@tempcnta
+  \advance\month1 \day1
+  \ifnum\month>14 \month3 \advance\year1 \fi
+  \sczpj@calc@mjd \advance\@tempcnta-3
+  \divide\@tempcnta7 \multiply\@tempcnta7 \advance\@tempcnta2
+  \ifnum\@tempcnta=\sczpj@mjd \global\sczpj@premium@fridaytrue \fi
+  % \sczpj@dayoweek
+  \@tempcnta\sczpj@mjd \advance\@tempcnta3 \@tempcntb\@tempcnta
+  \divide\@tempcntb7 \multiply\@tempcntb-7 \advance\@tempcnta\@tempcntb
+  \sczpj@list@get\sczpj@tmpa\sczpj@dayoweek@list\@tempcnta
+  \global\let\sczpj@dayoweek\sczpj@tmpa
+  % \sczpj@adjective
+  \sczpj@list@len\@tempcntb\sczpj@adjective@list
+  \@tempcnta\sczpj@mjd \chardef\sczpj@tmpb\@tempcntb
+  \@whilenum{\@tempcnta>44721}\do{\advance\@tempcnta-32768 }%
+  \multiply\@tempcnta\@tempcnta \divide\@tempcnta1024
+  \@tempcntb\@tempcnta \divide\@tempcntb\sczpj@tmpb
+  \multiply\@tempcntb-\sczpj@tmpb \advance\@tempcnta\@tempcntb
+  \sczpj@list@get\sczpj@tmpa\sczpj@adjective@list\@tempcnta
+  \global\let\sczpj@adjective\sczpj@tmpa
+\endgroup
+
+%% if today is the day
+\ifsczpj@premium@friday
+  \def\sczpj@adjective{Premium}
+\fi
+
+%% \ifsczpj@go@home
+\newif\ifsczpj@go@home
+\sczpj@go@hometrue % You should not go out!
+
+%--------------------------------------- prepare the hook
+
+%% \sczpj@begindoc@hook
+\let\sczpj@begindoc@hook\@empty
+\begingroup
+  \toks@\expandafter{\document}
+  \xdef\document{%
+    \endgroup
+    \noexpand\sczpj@begindoc@hook
+    \begingroup
+    \the\toks@}
+\endgroup
+
+%--------------------------------------- premium console message
+
+%% \sczpj@message@with
+\begingroup
+\catcode`\^^A=14 \catcode`\#=12
+\catcode`\^^\=0 \catcode`\^^[=1 \catcode`\^^]=2 \catcode`\^^X=6
+\endlinechar=10 \catcode10=12 \catcode96=7 \let\do\@makeother
+\dospecials``\gdef``\sczpj@message@with``X1``X2``[``A
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+       ____
+\H/ ___HHHH   _____                  WOW!
+ V / .   . \ |NICE!|       It's ``X2 today!
+ T \  ---  / |~~~~~
+ Y :#######: Y             ``X1
+ |\/   o*"*\/
+ |{    o    }
+ | \_______/                                         HURRAY!!
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%``]``A
+``\endgroup%
+
+%% \sczpj@message
+\ifsczpj@go@home
+  \def\sczpj@message{\sczpj@message@with
+   {Now it's time to go home....}{\sczpj@adjective\space\sczpj@dayoweek}}%
+\else
+  \def\sczpj@message{}%
+\fi
+
+%--------------------------------------- premium output
+
+%% variables
+\newif\ifsczpj@scsnowman@ok
+
+%% \sczpj@try@load@scsnowman
+\def\sczpj@try@load@scsnowman{%
+  \sczpj@scsnowman@oktrue
+  \IfFileExists{scsnowman.sty}{}{\sczpj@scsnowman@okfalse}%
+  \IfFileExists{tikz.sty}{}{\sczpj@scsnowman@okfalse}%
+  \ifsczpj@scsnowman@ok
+    \ifx\pgfsysdriver\@undefined
+      \ifnum0%
+          \ifx\XeTeXversion\@undefined\else1\fi
+          \ifx\outputmode\@undefined\else \the\outputmode \fi
+          \ifx\pdfoutput\@undefined\else \the\pdfoutput \fi >\z@
+        \RequirePackage{graphicx}%
+      \fi
+      \ifcase0\csname sczpj@gd/%
+          \ifx\Gin@driver\@undefined\else\Gin@driver\fi
+          \endcsname\relax
+      \or \edef\pgfsysdriver{pgfsys-\Gin@driver}%
+      \else
+        \IfFileExists{pgfsys-luatex.def}{%
+          \def\pgfsysdriver{pgfsys-luatex.def}%
+        }{\IfFileExists{luatex85.sty}{%
+          \def\pgfsysdriver{pgfsys-pdftex.def}%
+          \RequirePackage{luatex85}%
+        }{}}%
+      \fi
+    \fi
+    \ifx\pgfsysdriver\@undefined
+      \sczpj@scsnowman@okfalse
+    \else
+      \RequirePackage{tikz}%
+      \RequirePackage{scsnowman}%
+    \fi
+  \fi}
+\@namedef{sczpj@gd/luatex.def}{2}
+\@namedef{sczpj@gd/pdftex.def}{1}
+\@namedef{sczpj@gd/xetex.def}{1}
+\@namedef{sczpj@gd/dvips.def}{1}
+\@namedef{sczpj@gd/dvipdfmx.def}{1}
+
+%% \sczpj@prepare@output
+\def\sczpj@prepare@output{%
+  \DeclareFontFamily{OT1}{sczpjCmfi}{}%
+  \DeclareFontShape{OT1}{sczpjCmfi}{m}{n}{<->cmfi10}{}%
+  \sczpj@try@load@scsnowman
+  \ifsczpj@scsnowman@ok
+    \definecolor{sczpjBrown}{rgb}{0.4,0.1,0.0}%
+    \definecolor{sczpjGreen}{rgb}{0.0,0.5,0.0}%
+    \definecolor{sczpjRed}{rgb}{1.0,0.0,0.0}%
+    \definecolor{sczpjSnow}{rgb}{0.6,0.8,1.0}%
+    \definecolor{sczpjBroom}{rgb}{0.7,0.5,0.0}%
+    \@ifpackagelater{scsnowman}{2018/01/15}{%v1.2c
+      \scsnowmandefault{broom=sczpjBroom}%
+    }{}%
+    \def\sczpj@snowman{%
+      \begingroup
+        \usefont{T1}{lmr}{m}{n}\fontsize{38.4}{0}\selectfont
+        \scsnowman[hat=sczpjGreen,muffler=sczpjRed,%
+          arms=sczpjBrown,snow=sczpjSnow,scale=10]%
+      \endgroup}%
+  \else
+    \def\sczpj@snowman{%
+      \begingroup
+        \font\x=ipxm-r-u26 at 300pt\relax \x
+        \symbol{"03}%
+      \endgroup}%
+  \fi}
+
+%% \sczpj@make@output
+\def\sczpj@make@output{%
+  \parindent\z@
+  \usefont{OT1}{sczpjCmfi}{m}{n}\fontsize{72}{96}\selectfont
+  \hbox to\hsize{\hskip0.8em \sczpj@adjective\hfil}%
+  \hbox to\hsize{\hfil \sczpj@dayoweek!!\hskip0.8em}%
+  \vskip 20pt
+  \hbox to\hsize{\hfil\sczpj@snowman\hfil}%
+  \vskip 20pt
+  \usefont{OT1}{sczpjCmfi}{m}{n}\fontsize{48}{72}\selectfont
+  \hbox to\hsize{\hfil Time to Go Home!\hfil}}
+
+%--------------------------------------- the hook
+
+%% register
+\ifsczpj@go@home
+  \g@addto@macro\sczpj@begindoc@hook{%
+    \sczpj@prepare@output}
+\fi
+\g@addto@macro\sczpj@begindoc@hook{%
+  \immediate\write\@unused{\sczpj@message}}
+\ifsczpj@go@home
+  \g@addto@macro\sczpj@begindoc@hook{%
+    \output{\setbox\z@\box\@cclv \deadcycles\z@}%
+    \shipout\vbox{%
+      \moveleft1in\vbox{%
+        \hsize=210mm \linewidth\hsize
+        \kern-1in \kern40mm
+        \sczpj@make@output}}%
+    \nonstopmode\@@end}
+\fi
+
+%--------------------------------------- done
+\endinput
+%% EOF
