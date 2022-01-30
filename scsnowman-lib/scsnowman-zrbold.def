@@ -1,0 +1,190 @@
+%%
+%% This is file 'scsnowman-zrbold.def'.
+%%
+%% Copyright (c) 2021 Takayuki YATO (aka. "ZR")
+%%   GitHub:   https://github.com/zr-tex8r
+%%   Twitter:  @zr_tex8r
+%%
+%% This package is distributed under the MIT License.
+%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesFile{scsnowman-zrbold.def}[2021/02/01 v1.2d scsnowman definition (zrbold)]
+\def\sctkzsym@snowman@shape@zrbold{%
+  \setlength{\sctkzsym@coord@baseline}{%
+    \ifsctkzsym@snowman@adjustbaseline
+      0.144ex\relax
+    \else
+      \z@
+    \fi}%
+  \sctkzsym@beginyokobox
+  \begin{tikzpicture}[x=1.8ex,y=1.8ex,line width=0.040ex*\sctkzsym@coord@scl,line join=round,line cap=round,scale=\sctkzsym@snowman@scale,baseline=\sctkzsym@coord@baseline*\sctkzsym@coord@scl]
+    \useasboundingbox(0,0) rectangle (1,1);
+      \sctkzsym@snowman@bodypath % body (IPA-like)
+        (0.5,0.72) .. controls (0.64,0.72) and (0.76,0.65) ..
+        (0.76,0.55) .. controls (0.76,0.51) and (0.72,0.47) ..
+        (0.67,0.44) .. controls (0.79,0.41) and (0.84,0.32) ..
+        (0.84,0.25) .. controls (0.84,0.13) and (0.75,0.08) ..
+        (0.68,0.08) --
+        (0.32,0.08) .. controls (0.25,0.08) and (0.16,0.13) ..
+        (0.16,0.25) .. controls (0.16,0.32) and (0.21,0.41) ..
+        (0.33,0.44) .. controls (0.28,0.47) and (0.24,0.51) ..
+        (0.24,0.55) .. controls (0.24,0.65) and (0.36,0.72) ..
+        (0.5,0.72) --
+        cycle;
+    \ifsctkzsym@snowman@eyes
+      \sctkzsym@snowman@eyepath (0.40,0.56) circle (0.02 and 0.03);
+      \sctkzsym@snowman@eyepath (0.60,0.56) circle (0.02 and 0.03);
+    \fi
+    \ifsctkzsym@snowman@nose
+      \sctkzsym@snowman@nosepath
+        (0.49,0.50) .. controls (0.52,0.51) and (0.51,0.54) ..
+        (0.48,0.54) .. controls (0.46,0.54) and (0.40,0.52) ..
+        (0.40,0.52) .. controls (0.39,0.51) and (0.46,0.50) ..
+        (0.49,0.50) --
+        cycle;
+    \fi
+    \ifsctkzsym@snowman@mouth
+    \ifx\sctkzsym@snowman@mouthshape\sctkzsym@snowman@mouthshape@iii
+      \sctkzsym@snowman@mouthpath (0.40,0.47) -- (0.60,0.47);
+    \else\ifx\sctkzsym@snowman@mouthshape\sctkzsym@snowman@mouthshape@ii
+      \sctkzsym@snowman@mouthpath (0.40,0.46) .. controls (0.45,0.49) and (0.55,0.49) .. (0.60,0.46);
+    \else
+      \sctkzsym@snowman@mouthpath (0.40,0.48) .. controls (0.45,0.45) and (0.55,0.45) .. (0.60,0.48);
+    \fi\fi
+    \fi
+    \ifsctkzsym@snowman@sweat
+      \sctkzsym@snowman@sweatpath (0.70,0.56) .. controls (0.64,0.46) and (0.75,0.46) .. (0.70,0.56) -- cycle;
+    \fi
+    \ifsctkzsym@snowman@hat
+      \sctkzsym@snowman@hatpath % hat
+        (0.58,0.90) --
+        (0.77,0.81) --
+        (0.74,0.61) .. controls (0.66,0.60) and (0.50,0.66) ..
+        (0.46,0.72) --
+        (0.58,0.90) --
+        cycle;
+    \fi
+    \ifsctkzsym@snowman@mikan
+      \sctkzsym@snowman@mikanpath % mikan
+        (0.50,0.80) circle (0.15 and 0.12);
+    \ifsctkzsym@snowman@leaf
+      \sctkzsym@snowman@leafpath
+        (0.50,0.93) .. controls (0.58,0.95) ..
+        (0.65,0.88) .. controls (0.50,0.87) ..
+        (0.50,0.93) --
+        cycle;
+    \fi
+    \fi
+    \ifsctkzsym@snowman@broom
+      \sctkzsym@snowman@broompath[line width=0.08ex*\sctkzsym@coord@scl,line cap=butt]
+        (0.03,0.06) -- (0.12,0.50);
+      \sctkzsym@snowman@broompath[line width=0.03ex*\sctkzsym@coord@scl,line cap=butt]
+        (0.11,0.50) -- (0.06,0.75)
+        (0.12,0.50) -- (0.12,0.72)
+        (0.12,0.50) -- (0.18,0.76)
+        (0.12,0.50) -- (0.21,0.70)
+        (0.13,0.50) -- (0.27,0.74);
+    \fi
+    \ifsctkzsym@snowman@arms
+      \sctkzsym@snowman@armspath % right arm (SourceHanSans-like)
+        (0.20,0.31) .. controls (0.19,0.33) and (0.14,0.41) ..
+        (0.13,0.42) .. controls (0.12,0.43) and (0.10,0.43) ..
+        (0.07,0.44) .. controls (0.04,0.46) and (0.06,0.46) ..
+        (0.08,0.46) .. controls (0.09,0.46) and (0.11,0.44) ..
+        (0.12,0.44) .. controls (0.14,0.46) and (0.14,0.47) ..
+        (0.15,0.49) .. controls (0.16,0.51) and (0.16,0.49) ..
+        (0.16,0.48) .. controls (0.16,0.46) and (0.14,0.44) ..
+        (0.15,0.43) .. controls (0.16,0.42) and (0.21,0.35) ..
+        (0.22,0.33) .. controls (0.23,0.31) and (0.21,0.30) ..
+        (0.20,0.31) --
+        cycle;
+      \sctkzsym@snowman@armspath % left arm (SourceHanSans-like)
+        (0.80,0.31) .. controls (0.81,0.33) and (0.86,0.41) ..
+        (0.87,0.42) .. controls (0.88,0.43) and (0.90,0.43) ..
+        (0.93,0.44) .. controls (0.96,0.46) and (0.94,0.46) ..
+        (0.92,0.46) .. controls (0.91,0.46) and (0.89,0.44) ..
+        (0.88,0.44) .. controls (0.86,0.46) and (0.86,0.47) ..
+        (0.85,0.49) .. controls (0.84,0.51) and (0.84,0.49) ..
+        (0.84,0.48) .. controls (0.84,0.46) and (0.86,0.44) ..
+        (0.85,0.43) .. controls (0.84,0.42) and (0.79,0.35) ..
+        (0.78,0.33) .. controls (0.77,0.31) and (0.79,0.30) ..
+        (0.80,0.31) --
+        cycle;
+    \fi
+    \ifsctkzsym@snowman@muffler
+      \sctkzsym@snowman@mufflerpath % muffler (SourceHanSans-like)
+        (0.27,0.48) .. controls (0.42,0.38) and (0.58,0.38) ..
+        (0.73,0.48) .. controls (0.75,0.46) and (0.76,0.44) ..
+        (0.77,0.41) .. controls (0.77,0.39) and (0.75,0.37) ..
+        (0.73,0.36) .. controls (0.74,0.33) and (0.74,0.31) ..
+        (0.76,0.26) .. controls (0.75,0.25) and (0.72,0.24) ..
+        (0.66,0.23) .. controls (0.66,0.27) and (0.65,0.30) ..
+        (0.63,0.34) .. controls (0.42,0.30) and (0.32,0.35) ..
+        (0.24,0.41) .. controls (0.25,0.45) and (0.26,0.47) ..
+        (0.27,0.48) --
+        cycle;
+    \fi
+    \ifsctkzsym@snowman@buttons\ifsctkzsym@snowman@muffler
+      \sctkzsym@snowman@buttonpath (0.50,0.16) circle (0.03);
+      \sctkzsym@snowman@buttonpath (0.50,0.26) circle (0.03);
+    \else
+      \sctkzsym@snowman@buttonpath (0.50,0.17) circle (0.03);
+      \sctkzsym@snowman@buttonpath (0.50,0.29) circle (0.03);
+    \fi\fi
+    \ifsctkzsym@snowman@snow
+     \ifsctkzsym@snowman@broom
+      \sctkzsym@snowman@snowpath (0.13,0.81) circle (0.04);
+     \else
+      \sctkzsym@snowman@snowpath (0.07,0.28) circle (0.04);
+      \sctkzsym@snowman@snowpath (0.13,0.55) circle (0.04);
+     \ifsctkzsym@snowman@note\else
+      \sctkzsym@snowman@snowpath (0.08,0.68) circle (0.04);
+      \sctkzsym@snowman@snowpath (0.23,0.76) circle (0.04);
+     \fi
+     \fi
+      \sctkzsym@snowman@snowpath (0.42,0.89) circle (0.04);
+      \sctkzsym@snowman@snowpath (0.74,0.89) circle (0.04);
+      \sctkzsym@snowman@snowpath (0.88,0.73) circle (0.04);
+      \sctkzsym@snowman@snowpath (0.92,0.53) circle (0.04);
+      \sctkzsym@snowman@snowpath (0.94,0.23) circle (0.04);
+    \fi
+    \ifsctkzsym@snowman@note
+      \sctkzsym@snowman@notepath % musical note (eighth note, quaver)
+        (0.119,0.789) .. controls (0.114,0.788) and (0.114,0.788) ..
+        (0.115,0.781) .. controls (0.122,0.740) and (0.124,0.732) ..
+        (0.125,0.728) .. controls (0.127,0.717) and (0.127,0.717) ..
+        (0.118,0.717) .. controls (0.105,0.717) and (0.096,0.709) ..
+        (0.096,0.698) .. controls (0.096,0.691) and (0.100,0.686) ..
+        (0.106,0.683) .. controls (0.116,0.679) and (0.131,0.687) ..
+        (0.134,0.698) .. controls (0.135,0.700) and (0.134,0.710) ..
+        (0.132,0.720) .. controls (0.126,0.752) and (0.125,0.764) ..
+        (0.124,0.768) .. controls (0.124,0.773) and (0.124,0.773) ..
+        (0.132,0.773) .. controls (0.141,0.774) and (0.145,0.771) ..
+        (0.148,0.764) .. controls (0.150,0.760) and (0.154,0.758) ..
+        (0.155,0.761) .. controls (0.156,0.761) and (0.155,0.766) ..
+        (0.153,0.771) .. controls (0.151,0.780) and (0.146,0.785) ..
+        (0.139,0.789) .. controls (0.136,0.791) and (0.126,0.791) ..
+        (0.119,0.789) --
+        cycle;
+      \sctkzsym@snowman@notepath % wavy line
+        (0.235,0.770) .. controls (0.234,0.769) and (0.232,0.765) ..
+        (0.231,0.761) .. controls (0.228,0.750) and (0.223,0.749) ..
+        (0.210,0.760) .. controls (0.203,0.766) and (0.201,0.766) ..
+        (0.195,0.766) .. controls (0.186,0.766) and (0.179,0.761) ..
+        (0.174,0.750) .. controls (0.170,0.742) and (0.169,0.738) ..
+        (0.172,0.735) .. controls (0.176,0.732) and (0.179,0.734) ..
+        (0.183,0.741) .. controls (0.187,0.750) and (0.191,0.755) ..
+        (0.194,0.755) .. controls (0.196,0.755) and (0.200,0.752) ..
+        (0.203,0.749) .. controls (0.210,0.743) and (0.220,0.738) ..
+        (0.225,0.738) .. controls (0.231,0.738) and (0.237,0.742) ..
+        (0.241,0.749) .. controls (0.245,0.757) and (0.246,0.766) ..
+        (0.242,0.770) .. controls (0.239,0.772) and (0.238,0.772) ..
+        (0.235,0.770) --
+        cycle;
+    \fi
+  \end{tikzpicture}%
+  \sctkzsym@endyokobox
+}
+\endinput
+%%
+%% End of file `scsnowman-normal.def'.

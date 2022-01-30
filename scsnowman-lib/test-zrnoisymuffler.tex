@@ -1,0 +1,14 @@
+\documentclass{standalone}
+\usepackage[svgnames]{xcolor}
+\usepackage{tikz,scsnowman}
+\usescsnowmanlibrary{zrnoisymuffler}
+\colorlet{scmufflerpatterncolor}{Yellow}% color of stars in pattern
+\begin{document}
+\begin{tikzpicture}[x=1bp,y=1bp]
+\useasboundingbox (0,0) rectangle (240,180);
+\node at (120,90) {\scsnowman[scale=21,
+  muffler=Red,hat=Green,buttons=RoyalBlue,
+  arms=Brown,snow=SkyBlue,
+  shape=zrnoisymuffler]};
+\end{tikzpicture}
+\end{document}
