@@ -1,0 +1,65 @@
+%%
+%% This is file 'scsnowman-zrnofill.def'.
+%%
+%% Copyright (c) 2022 Takayuki YATO (aka. "ZR")
+%%   GitHub:   https://github.com/zr-tex8r
+%%   Twitter:  @zr_tex8r
+%%
+%% This package is distributed under the MIT License.
+%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesFile{scsnowman-zrnofill.def}[2022/08/02 v1.0 scsnowman definition (zrnofill)]
+\input{scsnowmanlib-zrextra-core.def}
+
+%--------------------------------------- patch
+
+\sczrextraStartPatch{zrnofill}
+\sczrextraApplyCore
+
+\patchcmd{\sczrextraShape}{% before
+  \sczrextraDynaPatchHere
+}{% after
+  \sczrextraDynaPatchHere
+  \sczxnf@dynapatch
+}{}{\sczrextraPatchFailed}
+
+\patchcmd{\sczrextraShape}{% before
+  (0.5,0.72) .. controls (0.64,0.72) and (0.76,0.65)
+}{% after
+  (0.74092,0.61583) .. controls (0.75319,0.59595) and (0.76,0.57382)
+}{}{\sczrextraPatchFailed}
+
+\patchcmd{\sczrextraShape}{% before
+  (0.24,0.55) .. controls (0.24,0.65) and (0.36,0.72) ..
+  (0.5,0.72) -- cycle;
+}{% after
+  (0.24,0.55) .. controls (0.24,0.63998) and (0.33716,0.70567) ..
+  (0.45863,0.71794)
+  \unless\ifsctkzsym@snowman@hat
+    .. controls (0.47215,0.7193) and (0.48598,0.72) ..
+   (0.5,0.72) .. controls (0.60663,0.72) and (0.70164,0.6794) ..
+   (0.74089,0.61586) -- cycle
+  \fi;
+}{}{\sczrextraPatchFailed}
+
+\sczrextraFinishPatch
+
+%--------------------------------------- dynapatch
+
+%% \sczxnf@dynapatch
+\def\sczxnf@dynapatch{%
+  \let\sczxnf@org@sctkzsym@snowman@buttonpath\sctkzsym@snowman@buttonpath
+  \let\sctkzsym@snowman@buttonpath\sczxnf@sctkzsym@snowman@buttonpath
+  \let\sczxnf@org@sctkzsym@snowman@hatpath\sctkzsym@snowman@hatpath
+  \let\sctkzsym@snowman@hatpath\sczxnf@sctkzsym@snowman@hatpath
+}
+\def\sczxnf@sctkzsym@snowman@buttonpath{%
+  \path[draw=\sctkzsym@snowman@buttonstroke]
+}
+\def\sczxnf@sctkzsym@snowman@hatpath{%
+  \path[draw=\sctkzsym@snowman@hatstroke]
+}
+
+%--------------------------------------- done
+\endinput
+%% EOF

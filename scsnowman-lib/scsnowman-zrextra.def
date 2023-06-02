@@ -1,0 +1,19 @@
+%%
+%% This is file 'scsnowman-zrextra.def'.
+%%
+%% Copyright (c) 2022 Takayuki YATO (aka. "ZR")
+%%   GitHub:   https://github.com/zr-tex8r
+%%   Twitter:  @zr_tex8r
+%%
+%% This package is distributed under the MIT License.
+%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesFile{scsnowman-zrextra.def}[2022/08/02 v1.0 scsnowman definition (zrextra)]
+\input{scsnowmanlib-zrextra-core.def}
+
+\sczrextraStartPatch{zrextra}
+\sczrextraApplyCore
+\sczrextraFinishPatch
+
+\endinput
+%% EOF

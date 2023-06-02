@@ -1,0 +1,275 @@
+%%
+%% This is file 'scsnowmanlib-zrextra-core.def'.
+%%
+%% Copyright (c) 2022-2023 Takayuki YATO (aka. "ZR")
+%%   GitHub:   https://github.com/zr-tex8r
+%%   Twitter:  @zr_tex8r
+%%
+%% This package is distributed under the MIT License.
+%%
+
+%% declarations
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesFile{scsnowmanlib-zrextra-core.def}
+
+%% avoid duplicate loading
+\csname sczrextraLoaded\endcsname
+\let\sczrextraLoaded\endinput
+
+%% package name
+\def\sczxc@pkgname{scsnowman}
+\def\sczxc@modname{sczrextra}
+
+%--------------------------------------- helpers
+
+%% packages
+\RequirePackage{etoolbox}[]
+\ifx\numdef\@undefined \endinput \fi
+\RequirePackage{pgfkeys}[]
+
+%% variables
+\newif\ifsczxc@ok
+\newif\ifsczxc@patch@ok
+\let\sczxc@shape@name\relax
+\newif\ifsczxc@dynapatch@done
+
+%% unique tokens
+\def\sczxc@end{\sczxc@end@}
+
+%% \sczrextraAppendOptions{<code>}\CS
+% When \CS = "...[...]...", does "...[...,<code>]...".
+\newcommand\sczrextraAppendOptions[2]{%
+  \expandafter\sczxc@append@options@a#2\sczxc@end{#1}%
+}
+\def\sczxc@append@options@a#1[#2]#3\sczxc@end#4{%
+  #1[#2,#4]#3%
+}
+
+%%<+> \sczrextraError{<message>}{<help-message>}
+\newcommand*\sczrextraError[2]{%
+  \GenericError{%
+    (\sczxc@modname)\@spaces\@spaces\@spaces\@spaces
+  }{%
+    Library \sczxc@modname\space Error: #1%
+  }{%
+    See the \sczxc@modname\space documentation for explanation.%
+  }{#2}%
+}
+
+%--------------------------------------- setup
+
+%% parameters
+\let\sczxc@boldness\relax
+\let\sczxc@bodyfill\relax
+\let\sczxc@snowfill\relax
+
+%% \sczxc@reset@params
+\def\sczxc@reset@params{%
+  bold=false,
+  bodyfill=false,
+  snowfill=false,
+}
+
+%%<*> \sczrextrareset
+\newcommand*\sczrextrareset{%
+  \expandafter\sczrextrasetup\expandafter{\sczxc@reset@params}%
+}
+
+%%<+> \sczrextraAppendReset{<text>}
+\newcommand*\sczrextraAppendReset[1]{%
+  \eappto\sczxc@reset@params{#1}%
+}
+
+%%<*> \sczrextrasetup{...}
+\newcommand*\sczrextrasetup{%
+  \setkeys{\sczxc@modname}%
+}
+
+%%<+> \sczrextraDefineKey{<key>}
+\newcommand*\sczrextraDefineKey{%
+  \define@key{\sczxc@modname}%
+}
+
+%% 'boldness=<real>'
+\sczrextraDefineKey{boldness}{%
+  \pgfmathsetmacro{\sczxc@boldness}{#1}%
+}
+
+%% 'bold'
+\sczrextraDefineKey{bold}[true]{%
+  \setbool{sczxc@ok}{#1}%
+  \ifsczxc@ok
+    \def\sczxc@boldness{1.6}%
+  \else
+    \def\sczxc@boldness{1}%
+  \fi
+}
+
+%% 'bodyfill=<color>|false'
+\sczrextraDefineKey{bodyfill}[white]{%
+  \ifstrequal{#1}{false}{%
+    \let\sczxc@bodyfill\relax
+  }{%
+    \def\sczxc@bodyfill{#1}%
+  }%
+}
+
+%% 'snowfill=<color>|false'
+\sczrextraDefineKey{snowfill}[white]{%
+  \ifstrequal{#1}{false}{%
+    \let\sczxc@snowfill\relax
+  }{%
+    \def\sczxc@snowfill{#1}%
+  }%
+}
+
+%% reset now
+\sczrextrareset
+
+%--------------------------------------- patch procedures
+
+%%<+> \sczrextraShape
+% The CS that holds the shape definition during the procedure.
+\let\sczrextraShape\relax
+
+%%<+> \sczrextraStartPatch{<shape>}
+\newcommand*\sczrextraStartPatch[1]{%
+  \ifx\sczrextraShape\relax
+    \edef\sczxc@shape@name{#1}%
+    \sczxc@start@patch
+  \else
+    \sczrextraError
+     {An unfinished procedure exists}
+     {Use \string\sczrextraFinishPatch\space
+         to finish the procedure.\MessageBreak
+      \@ehc}
+  \fi
+}
+\def\sczxc@start@patch{%
+  \let\sczrextraShape\sctkzsym@snowman@shape@normal
+  \sczxc@patch@oktrue
+}
+
+%%<+> \sczrextraFinishPatch
+\newcommand*\sczrextraFinishPatch{%
+  \ifsczxc@patch@ok
+    \cslet{sctkzsym@snowman@shape@\sczxc@shape@name}\sczrextraShape
+  \else
+    \sczrextraError
+     {The patch process failed}
+     {\@ehc}
+  \fi
+  \let\sczrextraShape\relax
+}
+%%<+> \sczrextraPatchFailed
+% Signals that the patch failed.
+\newcommand*\sczrextraPatchFailed{%
+  \sczxc@patch@okfalse
+}
+
+%%<+> \sczrextraCheckPatch
+% Jumps to \sczrextraFinishPatch if the patch has already failed.
+\newcommand*\sczrextraCheckPatch{%
+  \unless\ifsczxc@patch@ok
+    \expandafter\sczxc@check@patch
+  \fi
+}
+\long\def\sczxc@check@patch#1\sczrextraFinishPatch{%
+  \sczrextraFinishPatch
+}
+
+%%<+> \sczrextraShow{<shape>}
+\newcommand*\sczrextraShow[1]{%
+  \csshow{sctkzsym@snowman@shape@#1}%
+}
+
+%--------------------------------------- patch "Core"
+
+%%<+> \sczrextraApplyCore
+\newcommand*\sczrextraApplyCore{%
+  \sczxc@apply@patch@dynapatch
+  \sczxc@apply@patch@boldness
+  \sczxc@apply@patch@bodyfill
+  \sczxc@apply@patch@snowfill
+}
+
+%% \sczxc@apply@patch@dynapatch
+\def\sczxc@apply@patch@dynapatch{%
+  \patchcmd{\sczrextraShape}{% before
+    \useasboundingbox
+  }{% after
+    \sczxc@exec@dynapatch{\sczrextraDynaPatchHere}%
+    \useasboundingbox
+  }{}{\sczrextraPatchFailed}%
+}
+
+%%<+> \sczrextraDynaPatchHere
+% This is a marker, so this does nothing.
+\newcommand*\sczrextraDynaPatchHere{}
+
+%% \sczxc@exec@dynapatch{<code>}
+\def\sczxc@exec@dynapatch#1{%
+  \unless\ifsczxc@dynapatch@done
+    \sczxc@dynapatch@donetrue
+    #1%
+  \fi
+}
+
+%% \sczxc@apply@patch@boldness
+\def\sczxc@apply@patch@boldness{%
+  \patchcmd{\sczrextraShape}{% before
+    line width=0.025ex*\sctkzsym@coord@scl
+  }{% after
+    line width=\sczrextraLineWidth
+  }{}{\sczrextraPatchFailed}%
+}
+
+%%<+> \sczrextraLineWidth
+\newcommand*\sczrextraLineWidth{%
+  0.025ex*\sczxc@boldness*\sctkzsym@coord@scl
+}
+
+%% \sczxc@apply@patch@bodyfill
+\def\sczxc@apply@patch@bodyfill{%
+  \patchcmd{\sczrextraShape}{% before
+    \sctkzsym@snowman@bodypath
+  }{% after
+    \sczrextraBodyPath
+  }{}{\sczrextraPatchFailed}%
+}
+
+%%<+> \sczrextraBodyPath
+% NB. overridable.
+\newcommand*\sczrextraBodyPath{%
+  \ifundef\sczxc@bodyfill{}{%
+    \sczrextraAppendOptions{fill=\sczxc@bodyfill}%
+  }%
+  \sctkzsym@snowman@bodypath
+}
+
+%% \sczxc@apply@patch@snowfill
+\def\sczxc@apply@patch@snowfill{%
+  \patchcmd{\sczrextraShape}{% before
+    \sczrextraDynaPatchHere
+  }{% after
+    \sczrextraDynaPatchHere
+    \sczrextraSnowPath
+  }{}{\sczrextraPatchFailed}%
+}
+
+%%<+> \sczrextraSnowPath
+% NB. overridable.
+\newcommand*\sczrextraSnowPath{%
+  \let\sczxc@org@sctkzsym@snowman@snowpath\sctkzsym@snowman@snowpath
+  \let\sctkzsym@snowman@snowpath\sczxc@sctkzsym@snowman@snowpath
+}
+\def\sczxc@sctkzsym@snowman@snowpath{%
+  \ifundef\sczxc@snowfill{}{%
+    \sczrextraAppendOptions{fill=\sczxc@snowfill}%
+  }%
+  \sczxc@org@sctkzsym@snowman@snowpath
+}
+
+%--------------------------------------- done
+\endinput
+%% EOF
