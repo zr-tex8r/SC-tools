@@ -23,19 +23,56 @@ the Adobe Reader.
 scsnowman-lib ― Extension libraries for scsnowman package
 ----------------------------------------------------------
 
-### zrsymmetric ― Symmetric snowman figures
+### About custom shape definitions
+
+The [scsnowman] package supports *custom shape definitions*. A custom shape definition is written in a file named `scsnowman-‹name›.def`, and can be loaded by the `\usescsnowmanlibrary` command.
 
     \usepackage{scsnowman}
-    \usescsnowmanlibrary{zrsymmetric}
+    \usescsnowmanlibrary{‹name›}
 
-#### Usage
+The option key `shape=‹name›` enables the custom shape definition named `‹name›`.
 
-This extension library provides additional snowman shape option
-named `zrsymmetric`, which will greatly augment the variety
-of snowman figures realized by the [scsnowman] package.
-As the name indicates, snowman figures with this option
-are horizontally symmetric;
-see [the example](scsnowman-lib/test-zrsymmetric.pdf)
+    \scsnowman[shape=‹name›, muffler=red, …]
+
+### The “zrextra-core” series of custom shape definitions
+
+Custom shape definitions of this series has some interface in common.
+
+  * `\sczrextrasetup{‹key›=‹value›,…}`: Sets an extended parameter.
+  * `\sczrextrareset`: Resets all the existing extended parameters defined by zrextra-core.
+
+#### zrextra ― Basic extensions
+
+The custom shape definition `zrextra` defines the following extended parameters.
+
+  * `boldness=‹real r›`: Sets the line width to *r* times the standard value.
+  * `bold=‹bool›`: `bold=true` is equivalent to `boldness=1.6`, and `bold=false` is to `boldness=1`.
+  * `bodyfill=‹color›`: Sets the color to fill body.
+  * `snowfill=‹color›`: Sets the color to fill snow.
+
+NB. The extended parameters provided by `zrextra` is available also in other custom shape definitions of the `zrextra-core` series.
+
+#### zrnofill ― Snowman figures without filling
+
+The custom shape definition `zrnofill` changes the way to draw figures so athat hats and buttons are drawn without filling.
+
+NB. Mufflers and arms are not changed.
+
+#### zrsobbing ― Sobbing snowman figures
+
+The custom shape definition `zrsobbing` draws sobbing snowman figures.
+
+The parameter `sweat` is used to draw teardrops instead of sweat.
+
+This definition provides the following extended parameters.
+
+  * `sobbingmouthfill=‹color›`: Sets the color to fill mouth.
+
+### Legacy custom shape definitions
+
+#### zrsymmetric ― Symmetric snowman figures
+
+The custom shape definition `zrsymmetric` draws horizontally symmetric snowman figures. See [the example](scsnowman-lib/test-zrsymmetric.pdf)
 to know what the shape is like.
 
 

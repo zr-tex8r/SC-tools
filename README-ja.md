@@ -29,14 +29,58 @@ scnicefoot ― TeXの脚注をﾅﾝﾄｶにする
 scsnowman-lib ― scsnowman用の拡張パッケージ
 ---------------------------------------------
 
-### zrsymmetric ― 対称なゆきだるま
+### カスタム形状定義について
+
+[scsnowman]パッケージには標準と異なる形状のゆきだるまを描くための「カスタム形状定義」という仕組を提供している。カスタム形状定義は`scsnowman-‹名前›.def`というファイルに記述され、`\usescsnowmanlibrary`命令で読み込まれる。
 
     \usepackage{scsnowman}
-    \usescsnowmanlibrary{zrsymmetric}
+    \usescsnowmanlibrary{‹名前›}
 
-#### 説明
+scsnowmanの命令のオプション記述において、`shape=‹名前›`のキーを指定することで、当該の名前のカスタム形状定義が有効になる。
 
-[scsnowman]の描くゆきだるまを左右対称にする。
+    \scsnowman[shape=‹名前›, muffler=red, ...]
+
+### zrextra-core系列のカスタム形状定義
+
+カスタム形状定義の作製を統一的に行うための補助モジュールである「zrextra-core」を利用して実装されたカスタム形状定義の一群。
+
+zrextra-core系列の拡張ライブラリは共通のインタフェースを使用する。
+
+  * `\sczrextrasetup{‹キー›=‹値›,…}`： 拡張パラメタを設定する。
+  * `\sczrextrareset`: zrextra-coreで定義された全ての拡張パラメタを既定値に戻す。
+
+#### zrextra ― 基本的な拡張
+
+カスタム形状定義`zrextra`は次の拡張パラメタを定義する。
+
+  * `boldness=‹実数r›`： 線の太さを標準のr倍にする。
+  * `bold=‹真偽値›`： `bold=true`は`boldness=1.6`と、`bold=false`は`boldness=1`と同値。
+  * `bodyfill=‹色›`： 体の塗りつぶしの色を指定する。
+  * `snowfill=‹色›`： 雪の塗りつぶしの色を指定する。
+
+※`zrextra`の拡張パラメタは他のzrextra-core系列のカスタム形状定義でも使用可能である。
+
+#### zrnofill ― 塗りつぶさないゆきだるま
+
+ゆきだるまの帽子とボタンを塗りつぶさない。
+
+※現状では、マフラーと腕は変化しない。
+
+#### zrsobbing ― 泣いているゆきだるま
+
+泣いているゆきだるま。
+
+`sweat`パラメタは汗の代わりに涙を描くのに使われる。
+
+以下の拡張パラメタが使用可能である。
+
+  * `sobbingmouthfill=‹色›`： 口の塗りつぶしの色を指定する。
+
+### 旧来のカスタム形状定義
+
+#### zrsymmetric ― 対称なゆきだるま
+
+左右対称なゆきだるまを描く。
 
 参照：
 [scsnowmanでつくる対称コルーチン（※最新の定義）](https://zrbabbler.hatenablog.com/entry/2019/08/08/184504)
