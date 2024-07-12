@@ -1,0 +1,50 @@
+%%
+%% This is file 'scsnowman-zrmassy.def'.
+%%
+%% Copyright (c) 2022 Takayuki YATO (aka. "ZR")
+%%   GitHub:   https://github.com/zr-tex8r
+%%   Twitter:  @zr_tex8r
+%%
+%% This package is distributed under the MIT License.
+%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesFile{scsnowman-zrmassy.def}[2023/08/08 v1.0 scsnowman definition (zrmassy)]
+\input{scsnowmanlib-zrextra-core.def}
+
+%--------------------------------------- setup
+
+%% 'massyscale=<color>'
+\let\sczxmy@massyscale\relax
+\sczrextraAppendReset{%
+  massyscale=1.5,
+}
+\sczrextraDefineKey{massyscale}{%
+  \def\sczxmy@massyscale{#1}%
+}
+
+\sczrextrareset
+
+%--------------------------------------- patch
+
+\sczrextraStartPatch{zrmassy}
+\sczrextraApplyCore
+
+\patchcmd{\sczrextraShape}{% before
+  x=1.8ex%
+}{% after
+  x=\sczxmy@massyscale*1.8ex%
+}{}{\sczrextraPatchFailed}
+
+\patchcmd{\sczrextraShape}{% before
+  \sctkzsym@snowman@eyepath (0.40,0.56) circle (0.02 and 0.03);
+  \sctkzsym@snowman@eyepath (0.60,0.56) circle (0.02 and 0.03);
+}{% after
+  \sctkzsym@snowman@eyepath (0.40,0.56) circle (1/\sczxmy@massyscale*0.02 and 0.03);
+  \sctkzsym@snowman@eyepath (0.60,0.56) circle (1/\sczxmy@massyscale*0.02 and 0.03);
+}{}{\sczrextraPatchFailed}
+
+\sczrextraFinishPatch
+
+%--------------------------------------- done
+\endinput
+%% EOF

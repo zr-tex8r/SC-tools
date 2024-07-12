@@ -1,0 +1,41 @@
+%%
+%% This is file 'scsnowman-zrslight.def'.
+%%
+%% Copyright (c) 2022 Takayuki YATO (aka. "ZR")
+%%   GitHub:   https://github.com/zr-tex8r
+%%   Twitter:  @zr_tex8r
+%%
+%% This package is distributed under the MIT License.
+%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesFile{scsnowman-zrslight.def}[2023/08/08 v1.0 scsnowman definition (zrslight)]
+\input{scsnowmanlib-zrextra-core.def}
+
+%--------------------------------------- patch
+
+\sczrextraStartPatch{zrslight}
+\sczrextraApplyCore
+
+\patchcmd{\sczrextraShape}{% before
+    \ifx\sctkzsym@snowman@mouthshape\sctkzsym@snowman@mouthshape@iii
+      \sctkzsym@snowman@mouthpath (0.40,0.47) -- (0.60,0.47);
+    \else\ifx\sctkzsym@snowman@mouthshape\sctkzsym@snowman@mouthshape@ii
+      \sctkzsym@snowman@mouthpath (0.40,0.46) .. controls (0.45,0.49) and (0.55,0.49) .. (0.60,0.46);
+    \else
+      \sctkzsym@snowman@mouthpath (0.40,0.48) .. controls (0.45,0.45) and (0.55,0.45) .. (0.60,0.48);
+    \fi\fi
+}{% after
+    \ifx\sctkzsym@snowman@mouthshape\sctkzsym@snowman@mouthshape@iii
+      \sctkzsym@snowman@mouthpath (0.40,0.47) -- (0.60,0.47);
+    \else\ifx\sctkzsym@snowman@mouthshape\sctkzsym@snowman@mouthshape@ii
+      \sctkzsym@snowman@mouthpath (0.40,0.46) .. controls (0.45,0.49) and (0.55,0.49) .. (0.60,0.46);
+    \else
+      \sctkzsym@snowman@mouthpath (0.40,0.474) .. controls (0.45,0.462) and (0.55,0.462) .. (0.60,0.474);
+    \fi\fi
+}{}{\sczrextraPatchFailed}
+
+\sczrextraFinishPatch
+
+%--------------------------------------- done
+\endinput
+%% EOF
